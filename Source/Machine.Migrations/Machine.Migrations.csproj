@@ -13,7 +13,7 @@
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>..\..\Machine.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>..\Machine.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -35,27 +35,27 @@
   <ItemGroup>
     <Reference Include="Boo.Lang, Version=2.0.0.0, Culture=neutral, PublicKeyToken=32c39770e9a21a67, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Libraries\Boo\Boo.Lang.dll</HintPath>
+      <HintPath>..\..\Libraries\Boo\Boo.Lang.dll</HintPath>
     </Reference>
     <Reference Include="Boo.Lang.Compiler, Version=2.0.0.0, Culture=neutral, PublicKeyToken=32c39770e9a21a67, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Libraries\Boo\Boo.Lang.Compiler.dll</HintPath>
+      <HintPath>..\..\Libraries\Boo\Boo.Lang.Compiler.dll</HintPath>
     </Reference>
     <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Libraries\Logging\log4net.dll</HintPath>
+      <HintPath>..\..\Libraries\Logging\log4net.dll</HintPath>
     </Reference>
     <Reference Include="Machine.Container, Version=1.0.0.0, Culture=neutral, PublicKeyToken=5c474de7a495cff1, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Libraries\Machine\Container\Machine.Container.dll</HintPath>
+      <HintPath>..\..\Libraries\Machine\Container\Machine.Container.dll</HintPath>
     </Reference>
     <Reference Include="Machine.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=5c474de7a495cff1, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Libraries\Machine\Core\Machine.Core.dll</HintPath>
+      <HintPath>..\..\Libraries\Machine\Core\Machine.Core.dll</HintPath>
     </Reference>
     <Reference Include="Machine.MsBuildExtensions, Version=1.0.0.0, Culture=neutral, PublicKeyToken=5c474de7a495cff1, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Libraries\Machine\MsBuildExtensions\Machine.MsBuildExtensions.dll</HintPath>
+      <HintPath>..\..\Libraries\Machine\MsBuildExtensions\Machine.MsBuildExtensions.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Build.Engine" />
     <Reference Include="Microsoft.Build.Framework" />
@@ -134,7 +134,7 @@
     <Compile Include="SqlScriptMigration.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\Machine.snk" />
+    <None Include="..\Machine.snk" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
