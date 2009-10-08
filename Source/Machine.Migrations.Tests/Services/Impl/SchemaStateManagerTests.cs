@@ -29,11 +29,11 @@ namespace Machine.Migrations.Services.Impl
     {
       using (_mocks.Record())
       {
-        SetupResult.For(_databaseProvider.ExecuteScalarArray<Int16>(
-          "SELECT CAST({1} AS SMALLINT) FROM {0} WHERE {2} IS NULL ORDER BY {1}",
-          "schema_info", "version", "scope")).Return(new Int16[] {1, 2, 3});
+        SetupResult.For(_databaseProvider.ExecuteScalarArray<Int64>(
+          "SELECT CAST({1} AS BIGINT) FROM {0} WHERE {2} IS NULL ORDER BY {1}",
+          "schema_info", "version", "scope")).Return(new Int64[] {1, 2, 3});
       }
-      Assert.AreEqual(new Int16[] {1, 2, 3}, _target.GetAppliedMigrationVersions(null));
+      Assert.AreEqual(new Int64[] {1, 2, 3}, _target.GetAppliedMigrationVersions(null));
       _mocks.VerifyAll();
     }
 
@@ -42,11 +42,11 @@ namespace Machine.Migrations.Services.Impl
     {
       using (_mocks.Record())
       {
-        SetupResult.For(_databaseProvider.ExecuteScalarArray<Int16>(
-          "SELECT CAST({1} AS SMALLINT) FROM {0} WHERE {2} = '{3}' ORDER BY {1}",
-          "schema_info", "version", "scope", "core")).Return(new Int16[] {1, 2, 3});
+        SetupResult.For(_databaseProvider.ExecuteScalarArray<Int64>(
+          "SELECT CAST({1} AS BIGINT) FROM {0} WHERE {2} = '{3}' ORDER BY {1}",
+          "schema_info", "version", "scope", "core")).Return(new Int64[] {1, 2, 3});
       }
-      Assert.AreEqual(new Int16[] {1, 2, 3}, _target.GetAppliedMigrationVersions("core"));
+      Assert.AreEqual(new Int64[] {1, 2, 3}, _target.GetAppliedMigrationVersions("core"));
       _mocks.VerifyAll();
     }
 
@@ -77,7 +77,7 @@ namespace Machine.Migrations.Services.Impl
     [Test]
     public void SetMigrationVersionUnapplied_Always_NukesRow()
     {
-      short version = 1;
+      long version = 1;
       using (_mocks.Record())
       {
         SetupResult.For(_databaseProvider.ExecuteNonQuery(
@@ -91,7 +91,7 @@ namespace Machine.Migrations.Services.Impl
     [Test]
     public void SetMigrationVersionUnapplied_WithScope_Always_NukesRow()
     {
-      short version = 1;
+      long version = 1;
       using (_mocks.Record())
       {
         SetupResult.For(_databaseProvider.ExecuteNonQuery(
@@ -105,7 +105,7 @@ namespace Machine.Migrations.Services.Impl
     [Test]
     public void SetMigrationVersionApplied_Always_AddsRow()
     {
-      short version = 2;
+      long version = 2;
       using (_mocks.Record())
       {
         SetupResult.For(_databaseProvider.ExecuteNonQuery(
@@ -119,7 +119,7 @@ namespace Machine.Migrations.Services.Impl
     [Test]
     public void SetMigrationVersionApplied_WithScope_Always_AddsRow()
     {
-      short version = 2;
+      long version = 2;
       using (_mocks.Record())
       {
         SetupResult.For(_databaseProvider.ExecuteNonQuery(

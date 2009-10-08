@@ -76,6 +76,7 @@ namespace Machine.Migrations
   }
 
   [TestFixture]
+  [Ignore]
   public class WhenAlteringATable
   {
     MockMigrationContext context;
