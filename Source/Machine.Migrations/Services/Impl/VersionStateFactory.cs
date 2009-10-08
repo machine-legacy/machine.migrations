@@ -23,9 +23,9 @@ namespace Machine.Migrations.Services.Impl
     #region IVersionStateFactory Members
     public VersionState CreateVersionState(ICollection<MigrationReference> migrations)
     {
-      short[] applied = _schemaStateManager.GetAppliedMigrationVersions(_configuration.Scope);
-      short desired = _configuration.DesiredVersion;
-      short last = 0;
+      var applied = _schemaStateManager.GetAppliedMigrationVersions(_configuration.Scope);
+      long desired = _configuration.DesiredVersion;
+      long last = 0;
       if (migrations.Count > 0)
       {
         List<MigrationReference> all = new List<MigrationReference>(migrations);

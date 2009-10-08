@@ -15,7 +15,7 @@ namespace Machine.Migrations.Services.Impl
     string _migrationsDirectory;
     string _scope;
     string _compilerVersion;
-    short _desiredVersion = -1;
+    long _desiredVersion = -1;
     bool _showDiagnostics;
     string[] _references = new string[0];
     int _commandTimeout = 30;
@@ -68,7 +68,7 @@ namespace Machine.Migrations.Services.Impl
       set { _showDiagnostics = value; }
     }
 
-    public short DesiredVersion
+    public long DesiredVersion
     {
       get { return _desiredVersion; }
       set { _desiredVersion = value; }

@@ -1,10 +1,12 @@
-﻿namespace Machine.Migrations.Services
+﻿using System.Collections.Generic;
+
+namespace Machine.Migrations.Services
 {
   public interface ISchemaStateManager
   {
     void CheckSchemaInfoTable();
-    short[] GetAppliedMigrationVersions(string scope);
-    void SetMigrationVersionUnapplied(short version, string scope);
-    void SetMigrationVersionApplied(short version, string scope);
+    IEnumerable<long> GetAppliedMigrationVersions(string scope);
+    void SetMigrationVersionUnapplied(long version, string scope);
+    void SetMigrationVersionApplied(long version, string scope);
   }
 }

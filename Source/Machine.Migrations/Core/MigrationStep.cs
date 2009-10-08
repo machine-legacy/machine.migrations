@@ -24,12 +24,12 @@ namespace Machine.Migrations
       get { return _reverting; }
     }
 
-    public short Version
+    public long Version
     {
       get { return _migrationReference.Version; }
     }
 
-    public short VersionAfterApplying
+    public long VersionAfterApplying
     {
       get
       {

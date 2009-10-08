@@ -83,5 +83,29 @@ namespace Machine.Migrations.Services.Impl
       Assert.AreEqual(1, migrations[0].Version);
       _mocks.VerifyAll();
     }
+
+    [Test]
+    public void FindMigrations_HasTwoMigrationsWithSameVersion_Throws()
+    {
+      using (_mocks.Record())
+      {
+        _files.Add("001_migration2.cs");
+        _files.Add("001_migration.cs");
+        SetupResult.For(_configuration.MigrationsDirectory).Return("MigrationsDirectory");
+        SetupResult.For(_fileSystem.GetFiles("MigrationsDirectory")).Return(_files.ToArray());
+        SetupResult.For(_namer.ToCamelCase("migration")).Return("Migration");
+      }
+
+      try
+      {
+        List<MigrationReference> migrations = new List<MigrationReference>(_target.FindMigrations());
+      }
+      catch (DuplicateMigrationVersionException exc)
+      {
+        return;
+      }
+
+      Assert.Fail("Should have thrown DuplicateMigrationVersionException");
+    }
   }
 }

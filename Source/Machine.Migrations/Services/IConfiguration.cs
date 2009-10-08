@@ -20,7 +20,7 @@ namespace Machine.Migrations.Services
 
     string CompilerVersion { get; }
 
-    short DesiredVersion { get; }
+    long DesiredVersion { get; }
 
     bool ShowDiagnostics { get; }
 

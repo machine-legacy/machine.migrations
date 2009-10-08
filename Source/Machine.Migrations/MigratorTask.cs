@@ -17,7 +17,7 @@ namespace Machine.Migrations
     string _migrationsDirectory;
     string _scope;
     string _connectionString;
-    short _desiredVersion;
+    long _desiredVersion;
     int _commandTimeout = 30;
     bool _diagnostics;
     string[] _references;
@@ -66,7 +66,7 @@ namespace Machine.Migrations
       set { _migrationsDirectory = value; }
     }
 
-    public short DesiredVersion
+    public long DesiredVersion
     {
       get { return _desiredVersion; }
       set { _desiredVersion = value; }

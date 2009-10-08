@@ -42,7 +42,7 @@ namespace Machine.Migrations.Services.Impl
     {
       using (_mocks.Record())
       {
-        SetupMocks(4, new short[] {2});
+        SetupMocks(4, new long[] {2});
       }
       List<MigrationStep> actual = new List<MigrationStep>(_target.SelectMigrations());
       CollectionAssert.AreEqual(
@@ -152,17 +152,17 @@ namespace Machine.Migrations.Services.Impl
       CollectionAssert.IsEmpty(actual);
     }
 
-    void SetupMocks(short desired, short current)
+    void SetupMocks(long desired, long current)
     {
-      List<short> applied = new List<short>();
-      for (short i = 1; i <= current; ++i)
+      List<long> applied = new List<long>();
+      for (long i = 1; i <= current; ++i)
       {
         applied.Add(i);
       }
-      SetupMocks(desired, applied.ToArray());
+      SetupMocks(desired, applied);
     }
 
-    void SetupMocks(short desired, IList<short> applied)
+    void SetupMocks(long desired, IEnumerable<long> applied)
     {
       SetupResult.For(_versionStateFactory.CreateVersionState(_migrations)).Return(new VersionState(4, desired, applied));
       SetupResult.For(_migrationFinder.FindMigrations()).Return(_migrations);

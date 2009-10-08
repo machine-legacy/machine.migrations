@@ -6,12 +6,12 @@ namespace Machine.Migrations
 {
   public class MigrationReference
   {
-    short _version;
+    long _version;
     string _name;
     string _path;
     Type _ref;
 
-    public short Version
+    public long Version
     {
       get { return _version; }
       set { _version = value; }
@@ -48,7 +48,7 @@ namespace Machine.Migrations
     {
     }
 
-    public MigrationReference(short version, string name, string path)
+    public MigrationReference(long version, string name, string path)
     {
       _version = version;
       _name = name;

@@ -1,5 +1,5 @@
 ﻿using System;
-
+using System.Collections.Generic;
 using Machine.Migrations.DatabaseProviders;
 using Machine.Migrations.SchemaProviders;
 
@@ -48,31 +48,31 @@ namespace Machine.Migrations.Services.Impl
       Column[] columns = new Column[]
       {
         new Column(IdColumnName, typeof(Int32), 4, true),
-        new Column(VersionColumnName, typeof(Int32), 4, false),
+        new Column(VersionColumnName, typeof(Int64), 8, false),
         new Column(ScopeColumnName, typeof(string), 25, false, true)
       };
       _schemaProvider.AddTable(TableName, columns);
     }
 
-    public short[] GetAppliedMigrationVersions(string scope)
+    public IEnumerable<long> GetAppliedMigrationVersions(string scope)
     {
       if (string.IsNullOrEmpty(scope))
       {
         return
-          _databaseProvider.ExecuteScalarArray<Int16>(
-            "SELECT CAST({1} AS SMALLINT) FROM {0} WHERE {2} IS NULL ORDER BY {1}",
+          _databaseProvider.ExecuteScalarArray<Int64>(
+            "SELECT CAST({1} AS BIGINT) FROM {0} WHERE {2} IS NULL ORDER BY {1}",
             TableName, VersionColumnName, ScopeColumnName);
       }
       else
       {
         return
-          _databaseProvider.ExecuteScalarArray<Int16>(
-            "SELECT CAST({1} AS SMALLINT) FROM {0} WHERE {2} = '{3}' ORDER BY {1}",
+          _databaseProvider.ExecuteScalarArray<Int64>(
+            "SELECT CAST({1} AS BIGINT) FROM {0} WHERE {2} = '{3}' ORDER BY {1}",
             TableName, VersionColumnName, ScopeColumnName, scope);
       }
     }
 
-    public void SetMigrationVersionUnapplied(short version, string scope)
+    public void SetMigrationVersionUnapplied(long version, string scope)
     {
       if (string.IsNullOrEmpty(scope))
       {
@@ -86,7 +86,7 @@ namespace Machine.Migrations.Services.Impl
       }
     }
 
-    public void SetMigrationVersionApplied(short version, string scope)
+    public void SetMigrationVersionApplied(long version, string scope)
     {
       if (string.IsNullOrEmpty(scope))
       {

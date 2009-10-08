@@ -1,25 +1,26 @@
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Machine.Migrations.Core
 {
   public class VersionState
   {
-    readonly IList<short> _applied;
-    readonly short _last;
-    readonly short _desired;
+    readonly IEnumerable<long> _applied;
+    readonly long _last;
+    readonly long _desired;
     readonly string _scope;
 
-    public IList<short> Applied
+    public IEnumerable<long> Applied
     {
       get { return _applied; }
     }
 
-    public short Last
+    public long Last
     {
       get { return _last; }
     }
 
-    public short Desired
+    public long Desired
     {
       get { return _desired; }
     }
@@ -44,14 +45,14 @@ namespace Machine.Migrations.Core
       }
     }
 
-    public VersionState(short last, short desired, IList<short> applied)
+    public VersionState(long last, long desired, IEnumerable<long> applied)
     {
       _applied = applied;
       _last = last;
       _desired = desired;
     }
 
-    public VersionState(short last, short desired, IList<short> applied, string scope)
+    public VersionState(long last, long desired, IEnumerable<long> applied, string scope)
       : this(last, desired, applied)
     {
       _scope = scope;
