@@ -144,6 +144,17 @@ namespace Machine.Migrations.SchemaProviders
       }
     }
 
+    public virtual bool IsColumnOfType(string table, string column, string type)
+    {
+      using (Machine.Core.LoggingUtilities.Log4NetNdc.Push("IsColumnOfType({0}.{1}.{2})", table, column, type))
+      {
+        return
+          _databaseProvider.ExecuteScalar<Int32>(
+            "SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '{0}' AND COLUMN_NAME = '{1}' AND DATA_TYPE = '{2}'", table,
+            column, type) > 0;
+      }
+    }
+
     public void ChangeColumn(string table, string column, Type type, short size, bool allowNull)
     {
       _databaseProvider.ExecuteNonQuery("ALTER TABLE {0} ALTER COLUMN {1}", table,

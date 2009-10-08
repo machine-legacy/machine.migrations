@@ -40,6 +40,12 @@ namespace Machine.Migrations.Services.Impl
           _schemaProvider.AddColumn(TableName, ScopeColumnName, typeof(string), 25, false, true);
         }
 
+        if (!_schemaProvider.IsColumnOfType(TableName, VersionColumnName, "bigint"))
+        {
+          _log.InfoFormat("Changing {0} column to {1}...", VersionColumnName, "bigint");
+          _schemaProvider.ChangeColumn(TableName, ScopeColumnName, typeof(Int64), 8, false);
+        }
+
         return;
       }
 

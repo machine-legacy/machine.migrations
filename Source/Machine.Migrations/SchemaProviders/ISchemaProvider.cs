@@ -25,5 +25,6 @@ namespace Machine.Migrations.SchemaProviders
     void AddForeignKeyConstraint(string table, string name, string column, string foreignTable, string foreignColumn);
     void AddUniqueConstraint(string table, string name, params string[] columns);
     void DropConstraint(string table, string name);
+    bool IsColumnOfType(string table, string column, string type);
   }
 }
