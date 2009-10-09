@@ -12,6 +12,26 @@ using Microsoft.Build.Utilities;
 
 namespace Machine.Migrations
 {
+  public class Migrator
+  {
+    public virtual IMigratorContainerFactory CreateContainerFactory()
+    {
+      return new MigratorContainerFactory();
+    }
+
+    public void Run(IConfiguration configuration)
+    {
+      LoggingHelper.Disable("Machine.Container");
+      IMigratorContainerFactory migratorContainerFactory = CreateContainerFactory();
+      using (Machine.Core.LoggingUtilities.Log4NetNdc.Push(String.Empty))
+      {
+        IMachineContainer container = migratorContainerFactory.CreateAndPopulateContainer(configuration);
+        container.Resolve.Object<IMigrator>().RunMigrator();
+      }
+      
+    }
+  }
+
   public class MigratorTask : Task, IConfiguration
   {
     string _migrationsDirectory;
@@ -28,21 +48,12 @@ namespace Machine.Migrations
       _migrationsDirectory = Environment.CurrentDirectory;
     }
 
-    public virtual IMigratorContainerFactory CreateContainerFactory()
-    {
-      return new MigratorContainerFactory();
-    }
-
     public override bool Execute()
     {
       log4net.Config.BasicConfigurator.Configure(new Log4NetMsBuildAppender(this.Log, new log4net.Layout.PatternLayout("%-5p %x %m")));
-      LoggingHelper.Disable("Machine.Container");
-      IMigratorContainerFactory migratorContainerFactory = CreateContainerFactory();
-      using (Machine.Core.LoggingUtilities.Log4NetNdc.Push(String.Empty))
-      {
-        IMachineContainer container = migratorContainerFactory.CreateAndPopulateContainer(this);
-        container.Resolve.Object<IMigrator>().RunMigrator();
-      }
+      var migrator = new Migrator();
+      migrator.Run(this);
+
       return true;
     }
 
