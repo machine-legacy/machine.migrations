@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using log4net.Appender;
 using Machine.Migrations.DatabaseProviders;
 using Machine.Migrations.SchemaProviders;
 using Machine.Migrations.Services;
@@ -15,6 +16,8 @@ namespace Machine.Migrations.ConsoleRunner
 
     public static void Main(string[] args)
     {
+      log4net.Config.BasicConfigurator.Configure(new ConsoleAppender() { Layout = new log4net.Layout.PatternLayout("%-5p %x %m") });
+
       var program = new Program(new DefaultConsole());
       ExitCode exitCode = program.Run(args);
 
