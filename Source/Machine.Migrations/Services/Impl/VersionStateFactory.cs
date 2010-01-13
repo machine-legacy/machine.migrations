@@ -29,7 +29,9 @@ namespace Machine.Migrations.Services.Impl
 
     VersionState GetVersionState(string key, ICollection<MigrationReference> migrations)
     {
+      _configuration.ActiveConfigurationKey = key;
       var applied = _schemaStateManager.GetAppliedMigrationVersions(_configuration.Scope);
+      _configuration.ActiveConfigurationKey = null;
       long desired = _configuration.DesiredVersion;
       long last = 0;
       if (migrations.Count > 0)

@@ -19,6 +19,7 @@ namespace Machine.Migrations.Services.Impl
     bool _showDiagnostics;
     string[] _references = new string[0];
     int _commandTimeout = 30;
+    string _key;
     #endregion
 
     #region StaticMigratorConfiguration()
@@ -89,6 +90,12 @@ namespace Machine.Migrations.Services.Impl
     public string ConnectionStringByKey(string key)
     {
       return _connectionString;
+    }
+
+    public string ActiveConfigurationKey
+    {
+      get { return _key; }
+      set { _key = value; }
     }
 
     public Type DatabaseProviderType

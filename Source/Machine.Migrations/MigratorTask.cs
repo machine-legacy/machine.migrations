@@ -76,6 +76,12 @@ namespace Machine.Migrations
       return _connectionString;
     }
 
+    public string ActiveConfigurationKey
+    {
+      get;
+      set;
+    }
+
     public string MigrationsDirectory
     {
       get { return _migrationsDirectory; }

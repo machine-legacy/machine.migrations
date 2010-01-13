@@ -13,7 +13,6 @@ namespace Machine.Migrations.Services.Impl
     #region Member Data
     readonly IConfiguration _configuration;
     readonly Dictionary<string, IDbConnection> _connections = new Dictionary<string, IDbConnection>();
-    string _currentConfigurationKey = string.Empty;
     #endregion
 
     #region AbstractConnectionProvider()
@@ -26,11 +25,6 @@ namespace Machine.Migrations.Services.Impl
     #region IConnectionProvider Members
     protected abstract IDbConnection CreateConnection(IConfiguration configuration, string key);
 
-    public void UseConfiguration(string key)
-    {
-      _currentConfigurationKey = key;
-    }
-
     public void OpenConnection()
     {
       var connection = this.CurrentConnection;
@@ -40,13 +34,18 @@ namespace Machine.Migrations.Services.Impl
     {
       get
       {
-        if (!_connections.ContainsKey(_currentConfigurationKey))
+        var activeKey = _configuration.ActiveConfigurationKey;
+        if (activeKey == null)
         {
-          var connection = CreateConnection(_configuration, _currentConfigurationKey);
-          connection.Open();
-          _connections[_currentConfigurationKey] = connection;
+          throw new InvalidOperationException("Can't get a connection w/o setting an active configuration key, this is a bug in!");
         }
-        return _connections[_currentConfigurationKey];
+        if (!_connections.ContainsKey(activeKey))
+        {
+          var connection = CreateConnection(_configuration, activeKey);
+          connection.Open();
+          _connections[activeKey] = connection;
+        }
+        return _connections[activeKey];
       }
     }
     #endregion

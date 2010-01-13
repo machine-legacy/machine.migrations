@@ -52,6 +52,7 @@ namespace Machine.Migrations.Services.Impl
       {
         using (Machine.Core.LoggingUtilities.Log4NetNdc.Push("{0}", step.MigrationReference.Name))
         {
+          _configuration.ActiveConfigurationKey = step.MigrationReference.ConfigurationKey;
           _log.InfoFormat("Running {0}", step);
           if (!_configuration.ShowDiagnostics)
           {
@@ -79,6 +80,10 @@ namespace Machine.Migrations.Services.Impl
                 transaction.Rollback();
               }
               throw;
+            }
+            finally
+            {
+              _configuration.ActiveConfigurationKey = null;
             }
           }
         }

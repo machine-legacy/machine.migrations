@@ -27,6 +27,7 @@ namespace Machine.Migrations.Services.Impl
     {
       using (_mocks.Record())
       {
+        SetupResult.For(_configuration.ActiveConfigurationKey).Return(string.Empty);
         SetupResult.For(_configuration.ConnectionStringByKey(string.Empty)).Return("ConnectionString");
       }
       IDbConnection connection = _target.CurrentConnection;

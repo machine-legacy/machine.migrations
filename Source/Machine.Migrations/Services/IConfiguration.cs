@@ -16,6 +16,8 @@ namespace Machine.Migrations.Services
 
     string ConnectionStringByKey(string key);
 
+    string ActiveConfigurationKey { get; set; }
+
     string MigrationsDirectory { get; }
 
     string CompilerVersion { get; }

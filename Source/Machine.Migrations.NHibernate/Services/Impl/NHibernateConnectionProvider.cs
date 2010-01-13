@@ -28,14 +28,6 @@ namespace Machine.Migrations.NHibernate.Services.Impl
       var connection = this.CurrentConnection;
     }
 
-    public void UseConfiguration(string key)
-    {
-      if (key != string.Empty)
-      {
-        throw new NotSupportedException("NH mode doesn't support multiple configurations.");
-      }
-    }
-
     public IDbConnection CurrentConnection
     {
       get { return _sessionProvider.FindCurrentSession().Connection; }
