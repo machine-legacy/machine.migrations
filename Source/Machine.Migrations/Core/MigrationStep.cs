@@ -73,7 +73,7 @@ namespace Machine.Migrations
 
     public override string ToString()
     {
-      return String.Format("Step<{0}.{1}>", this.MigrationReference, this.Reverting ? "Down" : "Up");
+      return String.Format("{1}({0})", this.MigrationReference, this.Reverting ? "Down" : "Up");
     }
   }
 }

@@ -62,7 +62,9 @@ namespace Machine.Migrations
 
     public override string ToString()
     {
-      return String.Format("Migration<{0}, {1}>", _version, _name);
+      if (string.IsNullOrEmpty(_configurationKey))
+        return String.Format("{0} {1}", _version, _name);
+      return String.Format("{0} ({1}) {2}", _version, _configurationKey, _name);
     }
   }
 }

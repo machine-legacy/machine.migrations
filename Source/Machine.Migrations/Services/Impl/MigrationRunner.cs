@@ -50,10 +50,10 @@ namespace Machine.Migrations.Services.Impl
     {
       foreach (MigrationStep step in steps.SelectMany(row => row.Value).OrderBy(row => row.Version))
       {
+        _log.Info(step);
         using (Machine.Core.LoggingUtilities.Log4NetNdc.Push("{0}", step.MigrationReference.Name))
         {
           _configuration.ActiveConfigurationKey = step.MigrationReference.ConfigurationKey;
-          _log.InfoFormat("Running {0}", step);
           if (!_configuration.ShowDiagnostics)
           {
             IDbTransaction transaction = null;
