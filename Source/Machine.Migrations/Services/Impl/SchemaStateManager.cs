@@ -14,7 +14,6 @@ namespace Machine.Migrations.Services.Impl
     #region Member Data
     readonly string TableName = "schema_info";
     readonly string IdColumnName = "id";
-    // private readonly string ApplicationDateColumnName = "applied_at";
     readonly string VersionColumnName = "version";
     readonly string ScopeColumnName = "scope";
     readonly IDatabaseProvider _databaseProvider;

@@ -4,7 +4,7 @@ namespace Machine.Migrations.Services
 {
   public interface IMigrationRunner
   {
-    bool CanMigrate(ICollection<MigrationStep> steps);
-    void Migrate(ICollection<MigrationStep> steps);
+    bool CanMigrate(IDictionary<string, List<MigrationStep>> steps);
+    void Migrate(IDictionary<string, List<MigrationStep>> steps);
   }
 }

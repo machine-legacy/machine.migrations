@@ -31,9 +31,9 @@ namespace Machine.Migrations.Services.Impl
     #endregion
 
     #region IMigrationRunner Members
-    public bool CanMigrate(ICollection<MigrationStep> steps)
+    public bool CanMigrate(IDictionary<string, List<MigrationStep>> steps)
     {
-      foreach (MigrationStep step in steps)
+      foreach (MigrationStep step in steps[string.Empty])
       {
         MigrationReference migrationReference = step.MigrationReference;
         IMigrationFactory migrationFactory = _migrationFactoryChooser.ChooseFactory(migrationReference);
@@ -45,9 +45,9 @@ namespace Machine.Migrations.Services.Impl
       return true;
     }
 
-    public void Migrate(ICollection<MigrationStep> steps)
+    public void Migrate(IDictionary<string, List<MigrationStep>> steps)
     {
-      foreach (MigrationStep step in steps)
+      foreach (MigrationStep step in steps[string.Empty])
       {
         using (Machine.Core.LoggingUtilities.Log4NetNdc.Push("{0}", step.MigrationReference.Name))
         {

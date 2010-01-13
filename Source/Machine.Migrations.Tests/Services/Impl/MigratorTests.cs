@@ -19,11 +19,11 @@ namespace Machine.Migrations.Services.Impl
     IMigrationRunner _migrationRunner;
     ISchemaStateManager _schemaStateManager;
     IWorkingDirectoryManager _workingDirectoryManager;
-    List<MigrationStep> _steps;
+    Dictionary<string, List<MigrationStep>> _steps;
 
     public override Migrator Create()
     {
-      _steps = new List<MigrationStep>();
+      _steps = new Dictionary<string, List<MigrationStep>>();
       _databaseProvider = _mocks.DynamicMock<IDatabaseProvider>();
       _migrationSelector = _mocks.DynamicMock<IMigrationSelector>();
       _schemaStateManager = _mocks.DynamicMock<ISchemaStateManager>();

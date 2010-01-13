@@ -35,7 +35,7 @@ namespace Machine.Migrations.Services.Impl
         _workingDirectoryManager.Create();
         _databaseProvider.Open();
         _schemaStateManager.CheckSchemaInfoTable();
-        ICollection<MigrationStep> steps = _migrationSelector.SelectMigrations();
+        var steps = _migrationSelector.SelectMigrations();
         if (_migrationRunner.CanMigrate(steps))
         {
           _migrationRunner.Migrate(steps);

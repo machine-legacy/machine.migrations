@@ -6,6 +6,6 @@ namespace Machine.Migrations.Services
 {
   public interface IVersionStateFactory
   {
-    VersionState CreateVersionState(ICollection<MigrationReference> migrations);
+    IDictionary<string, VersionState> CreateVersionState(ICollection<MigrationReference> migrations);
   }
 }

@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
-
-using Machine.Migrations.Core;
+using System.Linq;
 
 namespace Machine.Migrations.Services.Impl
 {
@@ -20,26 +19,35 @@ namespace Machine.Migrations.Services.Impl
     #endregion
 
     #region IMigrationSelector Members
-    public ICollection<MigrationStep> SelectMigrations()
+    public IDictionary<string, List<MigrationStep>> SelectMigrations()
     {
-      ICollection<MigrationReference> all = _migrationFinder.FindMigrations();
-      List<MigrationStep> selected = new List<MigrationStep>();
+      var all = _migrationFinder.FindMigrations();
+      var selected = new Dictionary<string, List<MigrationStep>>();
+      selected[string.Empty] = new List<MigrationStep>();
       if (all.Count == 0)
       {
         return selected;
       }
-      VersionState version = _versionStateFactory.CreateVersionState(all);
-      foreach (MigrationReference migration in all)
+      var versionStates = _versionStateFactory.CreateVersionState(all);
+      foreach (var state in versionStates)
       {
+        selected[state.Key] = new List<MigrationStep>();
+      }
+      foreach (var migration in all)
+      {
+        var version = versionStates[migration.ConfigurationKey];
         if (version.IsApplicable(migration))
         {
-          MigrationStep step = new MigrationStep(migration, version.IsReverting);
-          selected.Add(step);
+          var step = new MigrationStep(migration, version.IsReverting);
+          selected[migration.ConfigurationKey].Add(step);
         }
       }
-      if (version.IsReverting)
+      foreach (var pair in versionStates)
       {
-        selected.Reverse();
+        if (pair.Value.IsReverting)
+        {
+          selected[pair.Key].Reverse();
+        }
       }
       return selected;
     }

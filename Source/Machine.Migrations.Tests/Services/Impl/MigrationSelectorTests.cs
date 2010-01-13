@@ -24,7 +24,7 @@ namespace Machine.Migrations.Services.Impl
       {
         SetupMocks(4, 0);
       }
-      List<MigrationStep> actual = new List<MigrationStep>(_target.SelectMigrations());
+      List<MigrationStep> actual = new List<MigrationStep>(_target.SelectMigrations()[string.Empty]);
       CollectionAssert.AreEqual(
         new MigrationStep[]
         {
@@ -44,7 +44,7 @@ namespace Machine.Migrations.Services.Impl
       {
         SetupMocks(4, new long[] {2});
       }
-      List<MigrationStep> actual = new List<MigrationStep>(_target.SelectMigrations());
+      List<MigrationStep> actual = new List<MigrationStep>(_target.SelectMigrations()[string.Empty]);
       CollectionAssert.AreEqual(
         new MigrationStep[]
         {
@@ -63,7 +63,7 @@ namespace Machine.Migrations.Services.Impl
       {
         SetupMocks(4, 4);
       }
-      List<MigrationStep> actual = new List<MigrationStep>(_target.SelectMigrations());
+      List<MigrationStep> actual = new List<MigrationStep>(_target.SelectMigrations()[string.Empty]);
       CollectionAssert.IsEmpty(actual);
     }
 
@@ -74,7 +74,7 @@ namespace Machine.Migrations.Services.Impl
       {
         SetupMocks(4, 2);
       }
-      List<MigrationStep> actual = new List<MigrationStep>(_target.SelectMigrations());
+      List<MigrationStep> actual = new List<MigrationStep>(_target.SelectMigrations()[string.Empty]);
       CollectionAssert.AreEqual(
         new MigrationStep[]
         {
@@ -92,7 +92,7 @@ namespace Machine.Migrations.Services.Impl
       {
         SetupMocks(1, 2);
       }
-      List<MigrationStep> actual = new List<MigrationStep>(_target.SelectMigrations());
+      List<MigrationStep> actual = new List<MigrationStep>(_target.SelectMigrations()[string.Empty]);
       CollectionAssert.AreEqual(
         new MigrationStep[]
         {
@@ -109,7 +109,7 @@ namespace Machine.Migrations.Services.Impl
       {
         SetupMocks(0, 4);
       }
-      List<MigrationStep> actual = new List<MigrationStep>(_target.SelectMigrations());
+      List<MigrationStep> actual = new List<MigrationStep>(_target.SelectMigrations()[string.Empty]);
       CollectionAssert.AreEqual(
         new MigrationStep[]
         {
@@ -129,7 +129,7 @@ namespace Machine.Migrations.Services.Impl
       {
         SetupMocks(0, 2);
       }
-      List<MigrationStep> actual = new List<MigrationStep>(_target.SelectMigrations());
+      List<MigrationStep> actual = new List<MigrationStep>(_target.SelectMigrations()[string.Empty]);
       CollectionAssert.AreEqual(
         new MigrationStep[]
         {
@@ -148,7 +148,7 @@ namespace Machine.Migrations.Services.Impl
         _migrations.Clear();
         SetupMocks(0, 0);
       }
-      List<MigrationStep> actual = new List<MigrationStep>(_target.SelectMigrations());
+      List<MigrationStep> actual = new List<MigrationStep>(_target.SelectMigrations()[string.Empty]);
       CollectionAssert.IsEmpty(actual);
     }
 
@@ -164,7 +164,11 @@ namespace Machine.Migrations.Services.Impl
 
     void SetupMocks(long desired, IEnumerable<long> applied)
     {
-      SetupResult.For(_versionStateFactory.CreateVersionState(_migrations)).Return(new VersionState(4, desired, applied));
+      SetupResult.For(_versionStateFactory.CreateVersionState(_migrations)).Return(new Dictionary<string, VersionState>() {
+        {
+          string.Empty, new VersionState(4, desired, applied)
+        } 
+      });
       SetupResult.For(_migrationFinder.FindMigrations()).Return(_migrations);
     }
 

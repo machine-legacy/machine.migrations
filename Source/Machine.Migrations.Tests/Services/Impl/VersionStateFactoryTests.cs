@@ -37,7 +37,7 @@ namespace Machine.Migrations.Services.Impl
         SetupResult.For(_configuration.DesiredVersion).Return((long)2);
         SetupResult.For(_schemaStateManager.GetAppliedMigrationVersions(null)).Return(new long[] {1, 2, 3});
       }
-      VersionState actual = _target.CreateVersionState(_migrations);
+      VersionState actual = _target.CreateVersionState(_migrations)[string.Empty];
       CollectionAssert.AreEqual(new long[] {1, 2, 3}, new List<long>(actual.Applied));
     }
 
@@ -49,7 +49,7 @@ namespace Machine.Migrations.Services.Impl
         SetupResult.For(_configuration.DesiredVersion).Return((long)2);
         SetupResult.For(_schemaStateManager.GetAppliedMigrationVersions(null)).Return(new long[] {1, 2, 3});
       }
-      VersionState actual = _target.CreateVersionState(_migrations);
+      VersionState actual = _target.CreateVersionState(_migrations)[string.Empty];
       Assert.AreEqual(4, actual.Last);
     }
 
@@ -61,7 +61,7 @@ namespace Machine.Migrations.Services.Impl
         SetupResult.For(_configuration.DesiredVersion).Return((long)-1);
         SetupResult.For(_schemaStateManager.GetAppliedMigrationVersions(null)).Return(new long[] {1, 2, 3});
       }
-      VersionState actual = _target.CreateVersionState(_migrations);
+      VersionState actual = _target.CreateVersionState(_migrations)[string.Empty];
       Assert.AreEqual(4, actual.Desired);
     }
 
@@ -85,7 +85,7 @@ namespace Machine.Migrations.Services.Impl
         SetupResult.For(_configuration.Scope).Return("core");
         SetupResult.For(_schemaStateManager.GetAppliedMigrationVersions("core")).Return(new long[] {1, 2, 3});
       }
-      VersionState actual = _target.CreateVersionState(_migrations);
+      VersionState actual = _target.CreateVersionState(_migrations)[string.Empty];
       Assert.AreEqual(0, actual.Desired);
     }
   }

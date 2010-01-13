@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 using Machine.Migrations.Core;
 
@@ -21,7 +22,14 @@ namespace Machine.Migrations.Services.Impl
     #endregion
 
     #region IVersionStateFactory Members
-    public VersionState CreateVersionState(ICollection<MigrationReference> migrations)
+    public IDictionary<string, VersionState> CreateVersionState(ICollection<MigrationReference> migrations)
+    {
+      return migrations.Select(m => m.ConfigurationKey).Distinct().ToDictionary(k => k, v => {
+        return GetVersionState(migrations);
+      });
+    }
+
+    VersionState GetVersionState(ICollection<MigrationReference> migrations)
     {
       var applied = _schemaStateManager.GetAppliedMigrationVersions(_configuration.Scope);
       long desired = _configuration.DesiredVersion;
