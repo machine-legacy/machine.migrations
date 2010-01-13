@@ -86,10 +86,9 @@ namespace Machine.Migrations.Services.Impl
       set { _compilerVersion = value; }
     }
 
-    public string ConnectionString
+    public string ConnectionStringByKey(string key)
     {
-      get { return _connectionString; }
-      set { _connectionString = value; }
+      return _connectionString;
     }
 
     public Type DatabaseProviderType

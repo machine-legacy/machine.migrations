@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 
 namespace Machine.Migrations.Services.Impl
 {
@@ -33,7 +34,7 @@ namespace Machine.Migrations.Services.Impl
     #region IMigrationRunner Members
     public bool CanMigrate(IDictionary<string, List<MigrationStep>> steps)
     {
-      foreach (MigrationStep step in steps[string.Empty])
+      foreach (MigrationStep step in steps.SelectMany(row => row.Value).OrderBy(row => row.Version))
       {
         MigrationReference migrationReference = step.MigrationReference;
         IMigrationFactory migrationFactory = _migrationFactoryChooser.ChooseFactory(migrationReference);
@@ -47,7 +48,7 @@ namespace Machine.Migrations.Services.Impl
 
     public void Migrate(IDictionary<string, List<MigrationStep>> steps)
     {
-      foreach (MigrationStep step in steps[string.Empty])
+      foreach (MigrationStep step in steps.SelectMany(row => row.Value).OrderBy(row => row.Version))
       {
         using (Machine.Core.LoggingUtilities.Log4NetNdc.Push("{0}", step.MigrationReference.Name))
         {

@@ -24,12 +24,10 @@ namespace Machine.Migrations.Services.Impl
     #region IVersionStateFactory Members
     public IDictionary<string, VersionState> CreateVersionState(ICollection<MigrationReference> migrations)
     {
-      return migrations.Select(m => m.ConfigurationKey).Distinct().ToDictionary(k => k, v => {
-        return GetVersionState(migrations);
-      });
+      return migrations.Select(m => m.ConfigurationKey).Distinct().ToDictionary(k => k, v => GetVersionState(v, migrations));
     }
 
-    VersionState GetVersionState(ICollection<MigrationReference> migrations)
+    VersionState GetVersionState(string key, ICollection<MigrationReference> migrations)
     {
       var applied = _schemaStateManager.GetAppliedMigrationVersions(_configuration.Scope);
       long desired = _configuration.DesiredVersion;

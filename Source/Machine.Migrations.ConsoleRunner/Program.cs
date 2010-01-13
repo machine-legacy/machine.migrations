@@ -86,6 +86,11 @@ namespace Machine.Migrations.ConsoleRunner
     public Type SchemaProviderType { get; set; }
     public Type DatabaseProviderType { get; set; }
     public string ConnectionString { get; set; }
+    public string ConnectionStringByKey(string key)
+    {
+      return ConnectionString;
+    }
+
     public string MigrationsDirectory { get; set; }
     public string CompilerVersion { get; set; }
     public long DesiredVersion { get; set; }

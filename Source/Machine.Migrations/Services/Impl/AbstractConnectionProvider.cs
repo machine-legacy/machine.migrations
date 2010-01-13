@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.Data;
 
 namespace Machine.Migrations.Services.Impl
@@ -10,35 +12,41 @@ namespace Machine.Migrations.Services.Impl
 
     #region Member Data
     readonly IConfiguration _configuration;
-    IDbConnection _connection;
+    readonly Dictionary<string, IDbConnection> _connections = new Dictionary<string, IDbConnection>();
+    string _currentConfigurationKey = string.Empty;
     #endregion
 
     #region AbstractConnectionProvider()
-    public AbstractConnectionProvider(IConfiguration configuration)
+    protected AbstractConnectionProvider(IConfiguration configuration)
     {
       _configuration = configuration;
     }
     #endregion
 
     #region IConnectionProvider Members
-    protected abstract IDbConnection CreateConnection(IConfiguration configuration);
+    protected abstract IDbConnection CreateConnection(IConfiguration configuration, string key);
 
-    public IDbConnection OpenConnection()
+    public void UseConfiguration(string key)
     {
-      return this.CurrentConnection;
+      _currentConfigurationKey = key;
+    }
+
+    public void OpenConnection()
+    {
+      var connection = this.CurrentConnection;
     }
 
     public IDbConnection CurrentConnection
     {
       get
       {
-        if (_connection == null)
+        if (!_connections.ContainsKey(_currentConfigurationKey))
         {
-          _log.Info("Opening Connection: " + _configuration.ConnectionString);
-          _connection = CreateConnection(_configuration);
-          _connection.Open();
+          var connection = CreateConnection(_configuration, _currentConfigurationKey);
+          connection.Open();
+          _connections[_currentConfigurationKey] = connection;
         }
-        return _connection;
+        return _connections[_currentConfigurationKey];
       }
     }
     #endregion

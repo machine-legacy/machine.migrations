@@ -4,7 +4,11 @@ namespace Machine.Migrations.Services
 {
   public interface IConnectionProvider
   {
-    IDbConnection OpenConnection();
-    IDbConnection CurrentConnection { get; }
+    void OpenConnection();
+    void UseConfiguration(string key);
+    IDbConnection CurrentConnection
+    {
+      get;
+    }
   }
 }

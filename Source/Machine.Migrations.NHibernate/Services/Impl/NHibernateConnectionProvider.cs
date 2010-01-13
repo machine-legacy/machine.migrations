@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using System;
+using System.Data;
 
 using Machine.Migrations.Services;
 
@@ -22,9 +23,17 @@ namespace Machine.Migrations.NHibernate.Services.Impl
     #endregion
 
     #region IConnectionProvider Members
-    public IDbConnection OpenConnection()
+    public void OpenConnection()
     {
-      return this.CurrentConnection;
+      var connection = this.CurrentConnection;
+    }
+
+    public void UseConfiguration(string key)
+    {
+      if (key != string.Empty)
+      {
+        throw new NotSupportedException("NH mode doesn't support multiple configurations.");
+      }
     }
 
     public IDbConnection CurrentConnection

@@ -14,7 +14,7 @@ namespace Machine.Migrations.Services
 
     Type DatabaseProviderType { get; }
 
-    string ConnectionString { get; }
+    string ConnectionStringByKey(string key);
 
     string MigrationsDirectory { get; }
 

@@ -71,6 +71,11 @@ namespace Machine.Migrations
       set { _scope = value; }
     }
 
+    public string ConnectionStringByKey(string key)
+    {
+      return _connectionString;
+    }
+
     public string MigrationsDirectory
     {
       get { return _migrationsDirectory; }

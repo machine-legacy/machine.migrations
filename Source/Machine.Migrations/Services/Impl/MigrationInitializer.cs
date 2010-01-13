@@ -30,8 +30,7 @@ namespace Machine.Migrations.Services.Impl
     #region IMigrationInitializer Members
     public void InitializeMigration(IDatabaseMigration migration)
     {
-      migration.Initialize(new MigrationContext(_configuration, _databaseProvider, _schemaProvider, _commonTransformations,
-        _connectionProvider));
+      migration.Initialize(new MigrationContext(_configuration, _databaseProvider, _schemaProvider, _commonTransformations, _connectionProvider));
     }
     #endregion
   }

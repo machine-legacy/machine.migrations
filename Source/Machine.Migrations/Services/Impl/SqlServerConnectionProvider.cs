@@ -13,9 +13,9 @@ namespace Machine.Migrations.Services.Impl
     #endregion
 
     #region IConnectionProvider Members
-    protected override IDbConnection CreateConnection(IConfiguration configuration)
+    protected override IDbConnection CreateConnection(IConfiguration configuration, string key)
     {
-      return new SqlConnection(configuration.ConnectionString);
+      return new SqlConnection(configuration.ConnectionStringByKey(key));
     }
     #endregion
   }
