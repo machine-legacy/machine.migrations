@@ -92,6 +92,11 @@ namespace Machine.Migrations.Services.Impl
       return _connectionString;
     }
 
+    public string ConnectionString
+    {
+      get { return _connectionString; }
+    }
+
     public string ActiveConfigurationKey
     {
       get { return _key; }

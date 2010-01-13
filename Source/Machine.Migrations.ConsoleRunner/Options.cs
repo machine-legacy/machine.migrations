@@ -1,21 +1,15 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
 using CommandLine;
 using CommandLine.Text;
-using Machine.Migrations.Services;
+using System.Linq;
 
 namespace Machine.Migrations.ConsoleRunner
 {
   public class Options
   {
-    [Option("c", "connection-string", HelpText = "The connection string to the database to migrate", Required = true)] 
-    public string ConnectionString = string.Empty;
-
-    /*
-    [Option("a", "apply", HelpText = "Applies only the specified migration", MutuallyExclusiveSet = "WhatToDo")] 
-    public string ApplyMigration = string.Empty;
-    */
+    [OptionList("c", "connection-string", HelpText = "The connection string to the database to migrate", Required = true, Separator = ',')] 
+    public List<string> ConnectionString = new List<string>();
 
     [Option("t", "to", HelpText = "Applies or unapplies migrations to get to the specified migration", MutuallyExclusiveSet = "WhatToDo")] 
     public long ToMigration = -1;
@@ -36,7 +30,7 @@ namespace Machine.Migrations.ConsoleRunner
     public bool ShowDiagnostics = false;
 
     [OptionList("r", "references", HelpText="Assemblies to reference while building migrations separated by commas", Separator = ',')]
-    public string[] References = new string[] {};
+    public List<string> References = new List<string>();
 
     [Option("t", "timeout", HelpText = "Default command timeout for migrations")]
     public int CommandTimeout = 60;
@@ -55,6 +49,16 @@ namespace Machine.Migrations.ConsoleRunner
       var parser = new CommandLineParser();
 
       return parser.ParseArguments(args, this, Console.Error);
+    }
+
+    public IDictionary<string, string> ParseConnectionStrings()
+    {
+      return ConnectionString.Select(k => {
+        var fields = k.Split('|');
+        if (fields.Length == 1)
+          return new[] { string.Empty, k };
+        return fields;
+      }).ToDictionary(k => k[0], v => v[1]);
     }
   }
 }

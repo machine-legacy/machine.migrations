@@ -16,6 +16,11 @@ namespace Machine.Migrations.Services
 
     string ConnectionStringByKey(string key);
 
+    string ConnectionString
+    {
+      get;
+    }
+
     string ActiveConfigurationKey { get; set; }
 
     string MigrationsDirectory { get; }

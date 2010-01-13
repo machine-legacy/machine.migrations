@@ -34,8 +34,7 @@ namespace Machine.Migrations.Services.Impl
       foreach (var match in FindFiles(_configuration.MigrationsDirectory))
       {
         var m = match.Match;
-        var file = Path.GetFileName(match.Path);
-        var migration = new MigrationReference(Int64.Parse(m.Groups[1].Value), _namer.ToCamelCase(m.Groups[2].Value), file, match.ConfigurationKey);
+        var migration = new MigrationReference(Int64.Parse(m.Groups[1].Value), _namer.ToCamelCase(m.Groups[2].Value), match.Path, match.ConfigurationKey);
 
         if (migrations.ContainsKey(migration.ConfigurationKey + migration.Version))
         {

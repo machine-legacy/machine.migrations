@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using log4net.Appender;
 using Machine.Migrations.DatabaseProviders;
@@ -16,7 +17,7 @@ namespace Machine.Migrations.ConsoleRunner
 
     public static void Main(string[] args)
     {
-      var appender = new ConsoleAppender() { Layout = new log4net.Layout.PatternLayout("%-5p %x %m") };
+      var appender = new ConsoleAppender() { Layout = new log4net.Layout.PatternLayout("%-5p %x %m%n") };
       appender.ActivateOptions();
 
       log4net.Config.BasicConfigurator.Configure(appender);
@@ -71,25 +72,34 @@ namespace Machine.Migrations.ConsoleRunner
       this.SchemaProviderType = typeof(SqlServerSchemaProvider);
       this.DatabaseProviderType = typeof(SqlServerDatabaseProvider);
       this.MigrationsDirectory = options.MigrationsDirectory;
-      Console.WriteLine("Migrations dir: " + options.MigrationsDirectory);
       this.CompilerVersion = options.CompilerVersion;
       this.DesiredVersion = options.ToMigration;
       this.ShowDiagnostics = options.ShowDiagnostics;
-      this.References = options.References;
+      this.References = options.References.ToArray();
       this.CommandTimeout = options.CommandTimeout;
-      this.ConnectionString = options.ConnectionString;
+      _connectionStrings = options.ParseConnectionStrings();
     }
+
+    readonly IDictionary<string, string> _connectionStrings;
 
     public string Scope { get; set; }
     public Type ConnectionProviderType { get; set; }
     public Type TransactionProviderType { get; set; }
     public Type SchemaProviderType { get; set; }
     public Type DatabaseProviderType { get; set; }
-    public string ConnectionString { get; set; }
     public string ActiveConfigurationKey { get; set; }
     public string ConnectionStringByKey(string key)
     {
-      return ConnectionString;
+      if (!_connectionStrings.ContainsKey(key))
+      {
+        throw new KeyNotFoundException("No connection string for key: " + key + " only have them for " + string.Join(" ", _connectionStrings.Keys.ToArray()));
+      }
+      return _connectionStrings[key];
+    }
+
+    public string ConnectionString
+    {
+      get { return ConnectionStringByKey(ActiveConfigurationKey); }
     }
 
     public string MigrationsDirectory { get; set; }
