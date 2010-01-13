@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
+using System.Linq;
 
 using Machine.Core.Services;
 
@@ -29,19 +30,19 @@ namespace Machine.Migrations.Services.Impl
     #region IMigrationFinder Members
     public ICollection<MigrationReference> FindMigrations()
     {
-      var migrations = new Dictionary<long, MigrationReference>();
-      foreach (string file in _fileSystem.GetFiles(_configuration.MigrationsDirectory))
+      var migrations = new Dictionary<string, MigrationReference>();
+      foreach (var match in FindFiles(_configuration.MigrationsDirectory))
       {
-        Match m = _regex.Match(Path.GetFileName(file));
-        if (m.Success)
+        var m = match.Match;
+        var file = Path.GetFileName(match.Path);
+        var migration = new MigrationReference(Int64.Parse(m.Groups[1].Value), _namer.ToCamelCase(m.Groups[2].Value), file, match.ConfigurationKey);
+
+        if (migrations.ContainsKey(migration.ConfigurationKey + migration.Version))
         {
-          var migration = new MigrationReference(Int64.Parse(m.Groups[1].Value), _namer.ToCamelCase(m.Groups[2].Value), file);
-
-          if (migrations.ContainsKey(migration.Version))
-            throw new DuplicateMigrationVersionException("Duplicate Version " + migration.Version);
-
-          migrations.Add(migration.Version, migration);
+          throw new DuplicateMigrationVersionException("Duplicate Version " + migration.Version);
         }
+
+        migrations.Add(migration.ConfigurationKey + migration.Version, migration);
       }
       var sortedMigrations = new List<MigrationReference>(migrations.Values);
       sortedMigrations.Sort((mr1, mr2) => mr1.Version.CompareTo(mr2.Version));
@@ -52,6 +53,35 @@ namespace Machine.Migrations.Services.Impl
       }
       return sortedMigrations;
     }
+
+    IEnumerable<MigrationFile> FindFiles(string directory)
+    {
+      var files = FindFiles(directory, string.Empty);
+      foreach (var subDirectory in _fileSystem.GetDirectories(directory))
+      {
+        files = files.Union(FindFiles(subDirectory, Path.GetFileName(subDirectory)));
+      }
+      return files;
+    }
+
+    IEnumerable<MigrationFile> FindFiles(string directory, string key)
+    {
+      foreach (var path in _fileSystem.GetFiles(directory))
+      {
+        var match = _regex.Match(Path.GetFileName(path));
+        if (match.Success)
+        {
+          yield return new MigrationFile { Match = match, Path = path, ConfigurationKey = key };
+        }
+      }
+    }
     #endregion
+  }
+
+  public class MigrationFile
+  {
+    public string Path { get; set; }
+    public string ConfigurationKey { get; set; }
+    public Match Match { get; set; }
   }
 }

@@ -6,6 +6,7 @@ namespace Machine.Migrations
 {
   public class MigrationReference
   {
+    readonly string _configurationKey;
     long _version;
     string _name;
     string _path;
@@ -14,13 +15,11 @@ namespace Machine.Migrations
     public long Version
     {
       get { return _version; }
-      set { _version = value; }
     }
 
     public string Name
     {
       get { return _name; }
-      set { _name = value; }
     }
 
     public IEnumerable<string> Aliases
@@ -35,7 +34,6 @@ namespace Machine.Migrations
     public string Path
     {
       get { return _path; }
-      set { _path = value; }
     }
 
     public Type Reference
@@ -44,15 +42,22 @@ namespace Machine.Migrations
       set { _ref = value; }
     }
 
-    public MigrationReference()
+    public string ConfigurationKey
     {
+      get { return _configurationKey; }
     }
 
     public MigrationReference(long version, string name, string path)
+      : this(version, name, path, string.Empty)
+    {
+    }
+
+    public MigrationReference(long version, string name, string path, string configurationKey)
     {
       _version = version;
       _name = name;
       _path = path;
+      _configurationKey = configurationKey;
     }
 
     public override string ToString()

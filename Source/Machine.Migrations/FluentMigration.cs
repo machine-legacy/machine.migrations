@@ -16,7 +16,7 @@ namespace Machine.Migrations
       get { return _fluentSchema; }
     }
 
-    public new ISchemaProvider SimpleSchema
+    public ISchemaProvider SimpleSchema
     {
       get { return base.Schema; }
     }

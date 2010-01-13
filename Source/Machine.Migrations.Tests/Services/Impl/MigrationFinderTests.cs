@@ -35,6 +35,7 @@ namespace Machine.Migrations.Services.Impl
       {
         SetupResult.For(_configuration.MigrationsDirectory).Return("MigrationsDirectory");
         SetupResult.For(_fileSystem.GetFiles("MigrationsDirectory")).Return(new string[0]);
+        SetupResult.For(_fileSystem.GetDirectories("MigrationsDirectory")).Return(new string[0]);
       }
       CollectionAssert.IsEmpty(new List<MigrationReference>(_target.FindMigrations()));
       _mocks.VerifyAll();
@@ -47,6 +48,7 @@ namespace Machine.Migrations.Services.Impl
       {
         SetupResult.For(_configuration.MigrationsDirectory).Return("MigrationsDirectory");
         SetupResult.For(_fileSystem.GetFiles("MigrationsDirectory")).Return(_files.ToArray());
+        SetupResult.For(_fileSystem.GetDirectories("MigrationsDirectory")).Return(new string[0]);
       }
       CollectionAssert.IsEmpty(new List<MigrationReference>(_target.FindMigrations()));
       _mocks.VerifyAll();
@@ -60,10 +62,31 @@ namespace Machine.Migrations.Services.Impl
         _files.Add("001_migration.cs");
         SetupResult.For(_configuration.MigrationsDirectory).Return("MigrationsDirectory");
         SetupResult.For(_fileSystem.GetFiles("MigrationsDirectory")).Return(_files.ToArray());
+        SetupResult.For(_fileSystem.GetDirectories("MigrationsDirectory")).Return(new string[0]);
         SetupResult.For(_namer.ToCamelCase("migration")).Return("Migration");
       }
       List<MigrationReference> migrations = new List<MigrationReference>(_target.FindMigrations());
       Assert.AreEqual(1, migrations.Count);
+      _mocks.VerifyAll();
+    }
+
+    [Test]
+    public void FindMigrations_HasSubDirectories_IsThoseMigrations()
+    {
+      using (_mocks.Record())
+      {
+        _files.Add("001_migration.cs");
+        SetupResult.For(_configuration.MigrationsDirectory).Return("MigrationsDirectory");
+        SetupResult.For(_fileSystem.GetFiles("MigrationsDirectory")).Return(new string[0]);
+        SetupResult.For(_fileSystem.GetDirectories("MigrationsDirectory")).Return(new[] { @"MigrationsDirectory\A", @"MigrationsDirectory\B" });
+        SetupResult.For(_fileSystem.GetFiles(@"MigrationsDirectory\A")).Return(new[] { @"MigrationsDirectory\A\000_run.cs" });
+        SetupResult.For(_fileSystem.GetFiles(@"MigrationsDirectory\B")).Return(new[] { @"MigrationsDirectory\B\000_run.cs" });
+        SetupResult.For(_namer.ToCamelCase("migration")).Return("Migration");
+      }
+      List<MigrationReference> migrations = new List<MigrationReference>(_target.FindMigrations());
+      Assert.AreEqual(2, migrations.Count);
+      Assert.AreEqual("A", migrations[1].ConfigurationKey);
+      Assert.AreEqual("B", migrations[0].ConfigurationKey);
       _mocks.VerifyAll();
     }
 
@@ -76,6 +99,7 @@ namespace Machine.Migrations.Services.Impl
         _files.Add("001_migration.cs");
         SetupResult.For(_configuration.MigrationsDirectory).Return("MigrationsDirectory");
         SetupResult.For(_fileSystem.GetFiles("MigrationsDirectory")).Return(_files.ToArray());
+        SetupResult.For(_fileSystem.GetDirectories("MigrationsDirectory")).Return(new string[0]);
         SetupResult.For(_namer.ToCamelCase("migration")).Return("Migration");
       }
       List<MigrationReference> migrations = new List<MigrationReference>(_target.FindMigrations());
@@ -93,6 +117,7 @@ namespace Machine.Migrations.Services.Impl
         _files.Add("001_migration.cs");
         SetupResult.For(_configuration.MigrationsDirectory).Return("MigrationsDirectory");
         SetupResult.For(_fileSystem.GetFiles("MigrationsDirectory")).Return(_files.ToArray());
+        SetupResult.For(_fileSystem.GetDirectories("MigrationsDirectory")).Return(new string[0]);
         SetupResult.For(_namer.ToCamelCase("migration")).Return("Migration");
       }
 
@@ -100,7 +125,7 @@ namespace Machine.Migrations.Services.Impl
       {
         List<MigrationReference> migrations = new List<MigrationReference>(_target.FindMigrations());
       }
-      catch (DuplicateMigrationVersionException exc)
+      catch (DuplicateMigrationVersionException)
       {
         return;
       }

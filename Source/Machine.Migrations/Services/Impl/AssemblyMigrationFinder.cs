@@ -30,7 +30,7 @@ namespace Machine.Migrations.Services.Impl
 
           MigrationAttribute att = (MigrationAttribute)attrs[0];
 
-          MigrationReference mref = new MigrationReference(att.Version, type.Name, "");
+          MigrationReference mref = new MigrationReference(att.Version, type.Name, "", String.Empty);
           mref.Reference = type;
 
           refs.Add(mref);
