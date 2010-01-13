@@ -29,8 +29,7 @@ namespace Machine.Migrations.Services.Impl
       _schemaStateManager = _mocks.DynamicMock<ISchemaStateManager>();
       _migrationRunner = _mocks.StrictMock<IMigrationRunner>();
       _workingDirectoryManager = _mocks.StrictMock<IWorkingDirectoryManager>();
-      return new Migrator(_migrationSelector, _migrationRunner, _databaseProvider, _schemaStateManager,
-        _workingDirectoryManager);
+      return new Migrator(_migrationSelector, _migrationRunner, _workingDirectoryManager);
     }
 
     [Test]
@@ -38,13 +37,10 @@ namespace Machine.Migrations.Services.Impl
     {
       using (_mocks.Record())
       {
-        _databaseProvider.Open();
-        _schemaStateManager.CheckSchemaInfoTable();
         SetupResult.For(_migrationSelector.SelectMigrations()).Return(_steps);
         _workingDirectoryManager.Create();
         SetupResult.For(_migrationRunner.CanMigrate(_steps)).Return(true);
         _migrationRunner.Migrate(_steps);
-        _databaseProvider.Close();
       }
       _target.RunMigrator();
       _mocks.VerifyAll();
@@ -55,12 +51,9 @@ namespace Machine.Migrations.Services.Impl
     {
       using (_mocks.Record())
       {
-        _databaseProvider.Open();
-        _schemaStateManager.CheckSchemaInfoTable();
         SetupResult.For(_migrationSelector.SelectMigrations()).Return(_steps);
         _workingDirectoryManager.Create();
         SetupResult.For(_migrationRunner.CanMigrate(_steps)).Return(false);
-        _databaseProvider.Close();
       }
       _target.RunMigrator();
       _mocks.VerifyAll();

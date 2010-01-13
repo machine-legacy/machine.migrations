@@ -61,6 +61,7 @@ namespace Machine.Migrations.Services.Impl
 
     public IEnumerable<long> GetAppliedMigrationVersions(string scope)
     {
+      CheckSchemaInfoTable();
       if (string.IsNullOrEmpty(scope))
       {
         return
