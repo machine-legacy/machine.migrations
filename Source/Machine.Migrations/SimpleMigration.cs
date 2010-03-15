@@ -7,16 +7,13 @@ namespace Machine.Migrations
 {
   public abstract class SimpleMigration : IDatabaseMigration
   {
-    #region Member Data
     readonly log4net.ILog _log;
     ISchemaProvider _schemaProvider;
     IDatabaseProvider _databaseProvider;
     ICommonTransformations _commonTransformations;
     IConfiguration _configuration;
     IConnectionProvider _connectionProvider;
-    #endregion
 
-    #region Properties
     public log4net.ILog Log
     {
       get { return _log; }
@@ -46,16 +43,12 @@ namespace Machine.Migrations
     {
       get { return _connectionProvider; }
     }
-    #endregion
 
-    #region SimpleMigration()
     protected SimpleMigration()
     {
       _log = log4net.LogManager.GetLogger(GetType());
     }
-    #endregion
 
-    #region IDatabaseMigration Members
     public virtual void Initialize(MigrationContext context)
     {
       _configuration = context.Configuration;
@@ -73,6 +66,5 @@ namespace Machine.Migrations
     public abstract void Up();
 
     public abstract void Down();
-    #endregion
   }
 }

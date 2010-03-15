@@ -6,29 +6,21 @@ using Machine.Migrations.Services;
 
 namespace Machine.Migrations.DatabaseProviders
 {
-  public class SqlServerDatabaseProvider : IDatabaseProvider
+  public class AdoNetDatabaseProvider : IDatabaseProvider
   {
-    #region Logging
-    static readonly log4net.ILog _log = log4net.LogManager.GetLogger(typeof(SqlServerDatabaseProvider));
-    #endregion
-
-    #region Member Data
+    static readonly log4net.ILog _log = log4net.LogManager.GetLogger(typeof(AdoNetDatabaseProvider));
     readonly IConnectionProvider _connectionProvider;
     readonly ITransactionProvider _transactionProvider;
     readonly IConfiguration _configuration;
-    #endregion
 
-    #region SqlServerDatabaseProvider()
-    public SqlServerDatabaseProvider(IConnectionProvider connectionProvider, ITransactionProvider transactionProvider,
+    public AdoNetDatabaseProvider(IConnectionProvider connectionProvider, ITransactionProvider transactionProvider,
       IConfiguration configuration)
     {
       _configuration = configuration;
       _connectionProvider = connectionProvider;
       _transactionProvider = transactionProvider;
     }
-    #endregion
 
-    #region IDatabaseProvider Members
     public void Open()
     {
       _connectionProvider.OpenConnection();
@@ -113,9 +105,7 @@ namespace Machine.Migrations.DatabaseProviders
         this.DatabaseConnection.Close();
       }
     }
-    #endregion
 
-    #region Member Data
     protected virtual IDbConnection DatabaseConnection
     {
       get { return _connectionProvider.CurrentConnection; }
@@ -130,6 +120,5 @@ namespace Machine.Migrations.DatabaseProviders
       _log.Info(command.CommandText);
       return command;
     }
-    #endregion
   }
 }

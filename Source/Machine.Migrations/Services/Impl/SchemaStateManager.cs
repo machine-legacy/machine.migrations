@@ -7,28 +7,20 @@ namespace Machine.Migrations.Services.Impl
 {
   public class SchemaStateManager : ISchemaStateManager
   {
-    #region Logging
     static readonly log4net.ILog _log = log4net.LogManager.GetLogger(typeof(SchemaStateManager));
-    #endregion
-
-    #region Member Data
     readonly string TableName = "schema_info";
     readonly string IdColumnName = "id";
     readonly string VersionColumnName = "version";
     readonly string ScopeColumnName = "scope";
     readonly IDatabaseProvider _databaseProvider;
     readonly ISchemaProvider _schemaProvider;
-    #endregion
 
-    #region SchemaStateManager()
     public SchemaStateManager(IDatabaseProvider databaseProvider, ISchemaProvider schemaProvider)
     {
       _databaseProvider = databaseProvider;
       _schemaProvider = schemaProvider;
     }
-    #endregion
 
-    #region ISchemaStateManager Members
     public void CheckSchemaInfoTable()
     {
       if (_schemaProvider.HasTable(TableName))
@@ -50,8 +42,7 @@ namespace Machine.Migrations.Services.Impl
 
       _log.InfoFormat("Creating {0}...", TableName);
 
-      Column[] columns = new Column[]
-      {
+      var columns = new [] {
         new Column(IdColumnName, typeof(Int32), 4, true),
         new Column(VersionColumnName, typeof(Int64), 8, false),
         new Column(ScopeColumnName, typeof(string), 25, false, true)
@@ -64,17 +55,11 @@ namespace Machine.Migrations.Services.Impl
       CheckSchemaInfoTable();
       if (string.IsNullOrEmpty(scope))
       {
-        return
-          _databaseProvider.ExecuteScalarArray<Int64>(
-            "SELECT CAST({1} AS BIGINT) FROM {0} WHERE {2} IS NULL ORDER BY {1}",
-            TableName, VersionColumnName, ScopeColumnName);
+        return _databaseProvider.ExecuteScalarArray<Int64>("SELECT CAST({1} AS BIGINT) FROM {0} WHERE {2} IS NULL ORDER BY {1}", TableName, VersionColumnName, ScopeColumnName);
       }
       else
       {
-        return
-          _databaseProvider.ExecuteScalarArray<Int64>(
-            "SELECT CAST({1} AS BIGINT) FROM {0} WHERE {2} = '{3}' ORDER BY {1}",
-            TableName, VersionColumnName, ScopeColumnName, scope);
+        return _databaseProvider.ExecuteScalarArray<Int64>("SELECT CAST({1} AS BIGINT) FROM {0} WHERE {2} = '{3}' ORDER BY {1}", TableName, VersionColumnName, ScopeColumnName, scope);
       }
     }
 
@@ -82,13 +67,11 @@ namespace Machine.Migrations.Services.Impl
     {
       if (string.IsNullOrEmpty(scope))
       {
-        _databaseProvider.ExecuteNonQuery("DELETE FROM {0} WHERE {1} = {2} AND {3} IS NULL",
-          TableName, VersionColumnName, version, ScopeColumnName);
+        _databaseProvider.ExecuteNonQuery("DELETE FROM {0} WHERE {1} = {2} AND {3} IS NULL", TableName, VersionColumnName, version, ScopeColumnName);
       }
       else
       {
-        _databaseProvider.ExecuteNonQuery("DELETE FROM {0} WHERE {1} = {2} AND {3} = '{4}'",
-          TableName, VersionColumnName, version, ScopeColumnName, scope);
+        _databaseProvider.ExecuteNonQuery("DELETE FROM {0} WHERE {1} = {2} AND {3} = '{4}'", TableName, VersionColumnName, version, ScopeColumnName, scope);
       }
     }
 
@@ -96,15 +79,12 @@ namespace Machine.Migrations.Services.Impl
     {
       if (string.IsNullOrEmpty(scope))
       {
-        _databaseProvider.ExecuteNonQuery("INSERT INTO {0} ({1}, {2}) VALUES ({3}, NULL)",
-          TableName, VersionColumnName, ScopeColumnName, version);
+        _databaseProvider.ExecuteNonQuery("INSERT INTO {0} ({1}, {2}) VALUES ({3}, NULL)", TableName, VersionColumnName, ScopeColumnName, version);
       }
       else
       {
-        _databaseProvider.ExecuteNonQuery("INSERT INTO {0} ({1}, {2}) VALUES ({3}, '{4}')",
-          TableName, VersionColumnName, ScopeColumnName, version, scope);
+        _databaseProvider.ExecuteNonQuery("INSERT INTO {0} ({1}, {2}) VALUES ({3}, '{4}')", TableName, VersionColumnName, ScopeColumnName, version, scope);
       }
     }
-    #endregion
   }
 }

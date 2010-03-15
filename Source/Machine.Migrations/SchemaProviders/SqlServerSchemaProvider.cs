@@ -11,25 +11,18 @@ namespace Machine.Migrations.SchemaProviders
 
   public class SqlServerSchemaProvider : ISchemaProvider
   {
-    #region Member Data
     readonly IDatabaseProvider _databaseProvider;
-    #endregion
 
-    #region Properties
     protected IDatabaseProvider DatabaseProvider
     {
       get { return _databaseProvider; }
     }
-    #endregion
 
-    #region SqlServerSchemaProvider()
     public SqlServerSchemaProvider(IDatabaseProvider databaseProvider)
     {
       _databaseProvider = databaseProvider;
     }
-    #endregion
 
-    #region ISchemaProvider Members
     public void AddTable(string table, ICollection<Column> columns)
     {
       if (columns.Count == 0)
@@ -38,19 +31,19 @@ namespace Machine.Migrations.SchemaProviders
       }
       using (Machine.Core.LoggingUtilities.Log4NetNdc.Push("AddTable"))
       {
-        StringBuilder sb = new StringBuilder();
+        var sb = new StringBuilder();
         sb.Append("CREATE TABLE ").Append(table).Append(" (");
-        bool first = true;
-        foreach (Column column in columns)
+        var first = true;
+        foreach (var column in columns)
         {
           if (!first) sb.Append(",");
           sb.AppendLine().Append(ColumnToCreateTableSql(column));
           first = false;
         }
 
-        foreach (Column column in columns)
+        foreach (var column in columns)
         {
-          string sql = ColumnToConstraintsSql(table, column);
+          var sql = ColumnToConstraintsSql(table, column);
           if (sql != null)
           {
             sb.Append(",").AppendLine().Append(sql);
@@ -71,9 +64,7 @@ namespace Machine.Migrations.SchemaProviders
     {
       using (Machine.Core.LoggingUtilities.Log4NetNdc.Push("HasTable({0})", table))
       {
-        return
-          _databaseProvider.ExecuteScalar<Int32>(
-            "SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = '{0}'", table) > 0;
+        return _databaseProvider.ExecuteScalar<Int32>("SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = '{0}'", table) > 0;
       }
     }
 
@@ -84,8 +75,7 @@ namespace Machine.Migrations.SchemaProviders
 
     public void AddColumn(string table, string column, Type type, short size, bool isPrimaryKey, bool allowNull)
     {
-      _databaseProvider.ExecuteNonQuery("ALTER TABLE {0} ADD {1}", table,
-        ColumnToCreateTableSql(new Column(column, type, size, isPrimaryKey, allowNull)));
+      _databaseProvider.ExecuteNonQuery("ALTER TABLE {0} ADD {1}", table, ColumnToCreateTableSql(new Column(column, type, size, isPrimaryKey, allowNull)));
     }
 
     public void AddColumn(string table, string column, Type type, bool allowNull)
@@ -127,9 +117,7 @@ namespace Machine.Migrations.SchemaProviders
     {
       using (Machine.Core.LoggingUtilities.Log4NetNdc.Push("HasSchema({0})", schemaName))
       {
-        return
-          _databaseProvider.ExecuteScalar<Int32>(
-            "SELECT COUNT(*) FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = '{0}'", schemaName) > 0;
+        return _databaseProvider.ExecuteScalar<Int32>("SELECT COUNT(*) FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = '{0}'", schemaName) > 0;
       }
     }
 
@@ -137,10 +125,7 @@ namespace Machine.Migrations.SchemaProviders
     {
       using (Machine.Core.LoggingUtilities.Log4NetNdc.Push("HasColumn({0}.{1})", table, column))
       {
-        return
-          _databaseProvider.ExecuteScalar<Int32>(
-            "SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '{0}' AND COLUMN_NAME = '{1}'", table,
-            column) > 0;
+        return _databaseProvider.ExecuteScalar<Int32>("SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '{0}' AND COLUMN_NAME = '{1}'", table, column) > 0;
       }
     }
 
@@ -148,25 +133,18 @@ namespace Machine.Migrations.SchemaProviders
     {
       using (Machine.Core.LoggingUtilities.Log4NetNdc.Push("IsColumnOfType({0}.{1}.{2})", table, column, type))
       {
-        return
-          _databaseProvider.ExecuteScalar<Int32>(
-            "SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '{0}' AND COLUMN_NAME = '{1}' AND DATA_TYPE = '{2}'", table,
-            column, type) > 0;
+        return _databaseProvider.ExecuteScalar<Int32>("SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '{0}' AND COLUMN_NAME = '{1}' AND DATA_TYPE = '{2}'", table, column, type) > 0;
       }
     }
 
     public void ChangeColumn(string table, string column, Type type, short size, bool allowNull)
     {
-      _databaseProvider.ExecuteNonQuery("ALTER TABLE {0} ALTER COLUMN {1}", table,
-        ColumnToCreateTableSql(new Column(column, type, size, false, allowNull)));
+      _databaseProvider.ExecuteNonQuery("ALTER TABLE {0} ALTER COLUMN {1}", table, ColumnToCreateTableSql(new Column(column, type, size, false, allowNull)));
     }
 
     public virtual string[] Columns(string table)
     {
-      using (
-        IDataReader reader =
-          _databaseProvider.ExecuteReader(
-            "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '{0}'", table))
+      using (var reader = _databaseProvider.ExecuteReader("SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '{0}'", table))
       {
         return GetColumnAsArray(reader, 0);
       }
@@ -174,14 +152,13 @@ namespace Machine.Migrations.SchemaProviders
 
     public virtual string[] Tables()
     {
-      using (IDataReader reader = _databaseProvider.ExecuteReader("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES"))
+      using (var reader = _databaseProvider.ExecuteReader("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES"))
       {
         return GetColumnAsArray(reader, 0);
       }
     }
 
-    public void AddForeignKeyConstraint(string table, string name, string column, string foreignTable,
-      string foreignColumn)
+    public void AddForeignKeyConstraint(string table, string name, string column, string foreignTable, string foreignColumn)
     {
       _databaseProvider.ExecuteNonQuery(
         "ALTER TABLE {0} ADD CONSTRAINT \"{1}\" FOREIGN KEY (\"{2}\") REFERENCES {3} (\"{4}\")", table, name, column,
@@ -193,7 +170,7 @@ namespace Machine.Migrations.SchemaProviders
       if (columns.Length == 0)
         throw new ArgumentException("AddUniqueConstraint requires at least one column name", "columns");
 
-      string colList = "";
+      var colList = "";
       foreach (string column in columns)
       {
         if (colList.Length != 0)
@@ -209,12 +186,10 @@ namespace Machine.Migrations.SchemaProviders
     {
       _databaseProvider.ExecuteNonQuery("ALTER TABLE {0} DROP CONSTRAINT \"{1}\"", table, name);
     }
-    #endregion
 
-    #region Member Data
     public static string[] GetColumnAsArray(IDataReader reader, int columnIndex)
     {
-      List<string> values = new List<string>();
+      var values = new List<string>();
       while (reader.Read())
       {
         values.Add(reader.GetString(columnIndex));
@@ -222,7 +197,7 @@ namespace Machine.Migrations.SchemaProviders
       return values.ToArray();
     }
 
-    public virtual string ColumnToCreateTableSql(Column column)
+    string ColumnToCreateTableSql(Column column)
     {
       return String.Format("\"{0}\" {1} {2} {3}",
         column.Name,
@@ -235,13 +210,11 @@ namespace Machine.Migrations.SchemaProviders
     {
       if (column.IsPrimaryKey)
       {
-        return String.Format("CONSTRAINT PK_{0}_{1} PRIMARY KEY CLUSTERED (\"{1}\")", SchemaUtils.Normalize(tableName),
-          SchemaUtils.Normalize(column.Name));
+        return String.Format("CONSTRAINT PK_{0}_{1} PRIMARY KEY CLUSTERED (\"{1}\")", SchemaUtils.Normalize(tableName), SchemaUtils.Normalize(column.Name));
       }
       else if (column.IsUnique)
       {
-        return String.Format("CONSTRAINT UK_{0}_{1} UNIQUE NONCLUSTERED (\"{1}\" ASC)", SchemaUtils.Normalize(tableName),
-          SchemaUtils.Normalize(column.Name));
+        return String.Format("CONSTRAINT UK_{0}_{1} UNIQUE NONCLUSTERED (\"{1}\" ASC)", SchemaUtils.Normalize(tableName), SchemaUtils.Normalize(column.Name));
       }
       return null;
     }
@@ -285,6 +258,5 @@ namespace Machine.Migrations.SchemaProviders
 
       throw new ArgumentException("type");
     }
-    #endregion
   }
 }

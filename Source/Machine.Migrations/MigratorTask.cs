@@ -147,7 +147,7 @@ namespace Machine.Migrations
 
     public virtual Type DatabaseProviderType
     {
-      get { return typeof(SqlServerDatabaseProvider); }
+      get { return typeof(AdoNetDatabaseProvider); }
     }
     #endregion
   }

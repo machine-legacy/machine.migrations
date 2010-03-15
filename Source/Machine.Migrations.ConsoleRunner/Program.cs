@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using log4net.Appender;
 using Machine.Migrations.DatabaseProviders;
+using Machine.Migrations.MySql;
 using Machine.Migrations.SchemaProviders;
 using Machine.Migrations.Services;
 using Machine.Migrations.Services.Impl;
@@ -23,7 +24,7 @@ namespace Machine.Migrations.ConsoleRunner
       log4net.Config.BasicConfigurator.Configure(appender);
 
       var program = new Program(new DefaultConsole());
-      ExitCode exitCode = program.Run(args);
+      var exitCode = program.Run(args);
 
       Environment.Exit((int)exitCode);
     }
@@ -67,10 +68,18 @@ namespace Machine.Migrations.ConsoleRunner
     public Configuration(Options options)
     {
       this.Scope = options.Scope;
-      this.ConnectionProviderType = typeof(SqlServerConnectionProvider);
+      if (!string.IsNullOrEmpty(options.DatabaseType) && options.DatabaseType == "mysql")
+      {
+        this.ConnectionProviderType = typeof(MySqlConnectionProvider);
+        this.SchemaProviderType = typeof(MySqlSchemaProvider);
+      }
+      else
+      {
+        this.ConnectionProviderType = typeof(SqlServerConnectionProvider);
+        this.SchemaProviderType = typeof(SqlServerSchemaProvider);
+      }
       this.TransactionProviderType = typeof(TransactionProvider);
-      this.SchemaProviderType = typeof(SqlServerSchemaProvider);
-      this.DatabaseProviderType = typeof(SqlServerDatabaseProvider);
+      this.DatabaseProviderType = typeof(AdoNetDatabaseProvider);
       this.MigrationsDirectory = options.MigrationsDirectory;
       this.CompilerVersion = options.CompilerVersion;
       this.DesiredVersion = options.ToMigration;

@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Machine.Migrations.NHiberna
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Machine.Migrations.ConsoleRunner", "Machine.Migrations.ConsoleRunner\Machine.Migrations.ConsoleRunner.csproj", "{43C353D2-018D-4FDF-ADF0-1E3282973810}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Machine.Migrations.MySql", "Machine.Migrations.MySql\Machine.Migrations.MySql.csproj", "{9E8207A3-DDB9-4AC6-86C1-AFE37D05EFA3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -31,6 +33,10 @@ Global
 		{43C353D2-018D-4FDF-ADF0-1E3282973810}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{43C353D2-018D-4FDF-ADF0-1E3282973810}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{43C353D2-018D-4FDF-ADF0-1E3282973810}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9E8207A3-DDB9-4AC6-86C1-AFE37D05EFA3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9E8207A3-DDB9-4AC6-86C1-AFE37D05EFA3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9E8207A3-DDB9-4AC6-86C1-AFE37D05EFA3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9E8207A3-DDB9-4AC6-86C1-AFE37D05EFA3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -10,7 +10,7 @@ namespace Machine.Migrations.Services.Impl
     #region Member Data
     Type _connectionProviderType = typeof(SqlServerConnectionProvider);
     Type _schemaProviderType = typeof(SqlServerSchemaProvider);
-    Type _databaseProviderType = typeof(SqlServerDatabaseProvider);
+    Type _databaseProviderType = typeof(AdoNetDatabaseProvider);
     string _connectionString;
     string _migrationsDirectory;
     string _scope;

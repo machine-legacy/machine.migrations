@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using CommandLine;
 using CommandLine.Text;
-using System.Linq;
 
 namespace Machine.Migrations.ConsoleRunner
 {
@@ -26,6 +26,9 @@ namespace Machine.Migrations.ConsoleRunner
     [Option("v", "compiler-version", HelpText = "Version of the compiler to use")]
     public string CompilerVersion;
 
+    [Option("b", "database", HelpText = "Type of database to use (mysql or sqlserver)")]
+    public string DatabaseType;
+
     [Option(null, "debug", HelpText="Show Diagnostics")]
     public bool ShowDiagnostics = false;
 
@@ -38,8 +41,9 @@ namespace Machine.Migrations.ConsoleRunner
     [HelpOption("?", "help", HelpText = "Display this help screen")]
     public string GetUsage()
     {
-      HelpText help = new HelpText(@"Machine.Migrations");
-      help.Copyright = new CopyrightInfo("Machine Project", 2007, 2008, 2009);
+      var help = new HelpText(@"Machine.Migrations") {
+        Copyright = new CopyrightInfo("Machine Project", 2007, 2008, 2009, 2010)
+      };
       help.AddOptions(this);
       return help;
     }
