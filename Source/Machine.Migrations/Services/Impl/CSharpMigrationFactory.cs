@@ -59,6 +59,8 @@ namespace Machine.Migrations.Services.Impl
                                                Path.GetFileNameWithoutExtension(migrationReference.Path) + ".dll");
       parameters.ReferencedAssemblies.Add(typeof (IDatabaseMigration).Assembly.Location);
       parameters.ReferencedAssemblies.Add(typeof (SqlMoney).Assembly.Location);
+      parameters.ReferencedAssemblies.Add(typeof (TimeZoneInfo).Assembly.Location);
+      parameters.ReferencedAssemblies.Add(typeof (log4net.ILog).Assembly.Location);
       parameters.IncludeDebugInformation = true;
       foreach (string reference in _configuration.References)
       {
